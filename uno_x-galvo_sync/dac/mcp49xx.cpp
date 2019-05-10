@@ -2,10 +2,10 @@
  * Modified by Andy @ Academia Sinica BCChen lab 2018/1/31
  * This modified library is using soft SPI to work with Micromanager Arduino firmware
  * 
- * Microchip MCP4901 / MCP4911 / MCP4921 / MCP4902 / MCP4912 / MCP4922 8/10/12-bit DAC driver
+ * Microchip mcp4901 / mcp4911 / mcp4921 / mcp4902 / mcp4912 / mcp4922 8/10/12-bit DAC driver
  * Thomas Backman, 2012-07 (made a proper library 2011-07-30, 3 weeks after initial)
  * serenity@exscape.org
- * Support for MCP49x2 (MCP4902, MCP4912, MCP4922) added 2012-08-30,
+ * Support for mcp49x2 (mcp4902, mcp4912, mcp4922) added 2012-08-30,
  * with a patch and testing from Jonas Gruska
  
  * Code license: BSD/MIT. Whatever; I *prefer* to be credited,
@@ -27,7 +27,7 @@
  * Pin 8: vout
  * (Pin 9, for the DFN package only: VSS)
 
- * Only tested on MCP4901 (8-bit) and MCP4922 (dual 12-bit), but it should work on the others as well.
+ * Only tested on mcp4901 (8-bit) and mcp4922 (dual 12-bit), but it should work on the others as well.
  * Tested on an Arduino Uno R3.
  */
 
@@ -42,21 +42,21 @@ mcp49xx::mcp49xx(mcp49xx::Model _model, int _cs_pin, int _sck_pin, int _sdi_pin,
     this->ldac_pin = _ldac_pin;
 
     /* 
-  * MCP49x1 models are single DACs, while MCP49x2 are dual.
+  * mcp49x1 models are single DACs, while mcp49x2 are dual.
   * Apart from that, only the bit width differ between the models.
   */
     switch (_model)
     {
-    case MCP4901:
-    case MCP4902:
+    case mcp4901:
+    case mcp4902:
         bitwidth = 8;
         break;
-    case MCP4911:
-    case MCP4912:
+    case mcp4911:
+    case mcp4912:
         bitwidth = 10;
         break;
-    case MCP4921:
-    case MCP4922:
+    case mcp4921:
+    case mcp4922:
         bitwidth = 12;
         break;
     default:
@@ -77,7 +77,7 @@ void mcp49xx::setBuffer(boolean _buffer)
     this->bufferVref = _buffer;
 }
 
-// Only relevant for the MCP49x2 dual DACs.
+// Only relevant for the mcp49x2 dual DACs.
 // If set, calling output2() will pull the LDAC pin low automatically,
 // which causes the output to change.
 // Not required if the LDAC pin is shorted to ground, however in that case,
@@ -143,7 +143,7 @@ void mcp49xx::_output(unsigned short data, Channel chan)
     // Drive chip select low
     digitalWrite(cs_pin, LOW);
 
-    // bit 15: 0 for DAC A, 1 for DAC B. (Always 0 for MCP49x1.)
+    // bit 15: 0 for DAC A, 1 for DAC B. (Always 0 for mcp49x1.)
     // bit 14: buffer VREF?
     // bit 13: gain bit; 0 for 1x gain, 1 for 2x (thus we NOT the variable)
     // bit 12: shutdown bit. 1 for active operation
@@ -157,25 +157,25 @@ void mcp49xx::_output(unsigned short data, Channel chan)
     digitalWrite(cs_pin, HIGH);
 }
 
-// For MCP49x1
+// For mcp49x1
 void mcp49xx::output(unsigned short data)
 {
     this->_output(data, CHANNEL_A);
 }
 
-// For MCP49x2
+// For mcp49x2
 void mcp49xx::outputA(unsigned short data)
 {
     this->_output(data, CHANNEL_A);
 }
 
-// For MCP49x2
+// For mcp49x2
 void mcp49xx::outputB(unsigned short data)
 {
     this->_output(data, CHANNEL_B);
 }
 
-// MCP49x2 (dual DAC) only.
+// mcp49x2 (dual DAC) only.
 // Send a set of new values for the DAC to output in a single function call
 void mcp49xx::output2(unsigned short data_A, unsigned short data_B)
 {
