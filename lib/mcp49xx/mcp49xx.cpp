@@ -32,13 +32,12 @@
  */
 
 #include "mcp49xx.h"
+#include <SPI.h>
 
-mcp49xx::mcp49xx(mcp49xx::Model _model, int _cs_pin, int _sck_pin, int _sdi_pin, int _ldac_pin)
+mcp49xx::mcp49xx(mcp49xx::Model _model, int _cs_pin, int _ldac_pin)
     : bufferVref(false), gain2x(false), automaticallyLatchDual(true)
 {
     this->cs_pin = _cs_pin;
-    this->sck_pin = _sck_pin;
-    this->sdi_pin = _sdi_pin;
     this->ldac_pin = _ldac_pin;
 
     /* 
@@ -62,14 +61,12 @@ mcp49xx::mcp49xx(mcp49xx::Model _model, int _cs_pin, int _sck_pin, int _sdi_pin,
     default:
         bitwidth = 0;
     }
+    
+    SPI.begin(cs_pin);
 
-    pinMode(cs_pin, OUTPUT);
-    pinMode(sck_pin, OUTPUT);
-    pinMode(sdi_pin, OUTPUT);
+    // un-latch the output
     pinMode(ldac_pin, OUTPUT);
-
-    digitalWrite(cs_pin, HIGH);   // Unselect the device
-    digitalWrite(ldac_pin, HIGH); // Un-latch the output
+    digitalWrite(ldac_pin, HIGH);
 }
 
 void mcp49xx::setBuffer(boolean _buffer)
@@ -115,17 +112,11 @@ boolean mcp49xx::setGain(int _gain)
 // Time to settle on an output value increases from ~4.5 µs to ~10 µs, though (according to the datasheet).
 void mcp49xx::shutdown(void)
 {
-    // Drive chip select low
-    digitalWrite(cs_pin, LOW);
-
     // Sending all zeroes should work, too, but I'm unsure whether there might be a switching time
     // between buffer and gain modes, so we'll send them so that they have the same value once we
     // exit shutdown.
     unsigned short out = (bufferVref << 14) | ((!(gain2x)) << 13); // gain == 0 means 2x, so we need to invert it
-    _transfer((out & 0xff00) >> 8, out & 0xff);
-
-    // Return chip select to high
-    digitalWrite(cs_pin, HIGH);
+    _transfer(out);
 }
 
 // Private function.
@@ -140,21 +131,14 @@ void mcp49xx::_output(unsigned short data, Channel chan)
     else if (this->bitwidth == 8)
         data &= 0xff;
 
-    // Drive chip select low
-    digitalWrite(cs_pin, LOW);
-
     // bit 15: 0 for DAC A, 1 for DAC B. (Always 0 for mcp49x1.)
     // bit 14: buffer VREF?
     // bit 13: gain bit; 0 for 1x gain, 1 for 2x (thus we NOT the variable)
     // bit 12: shutdown bit. 1 for active operation
     // bits 11 through 0: data
     uint16_t out = (chan << 15) | (this->bufferVref << 14) | ((!this->gain2x) << 13) | (1 << 12) | (data << (12 - this->bitwidth));
-
     // Send the command and data bits
-    _transfer((out & 0xff00) >> 8, out & 0xff);
-
-    // Return chip select to high
-    digitalWrite(cs_pin, HIGH);
+    _transfer(out);
 }
 
 // For mcp49x1
@@ -218,8 +202,9 @@ void mcp49xx::latch(void)
     digitalWrite(ldac_pin, HIGH);
 }
 
-void mcp49xx::_transfer(byte msb, byte lsb)
+void mcp49xx::_transfer(uint16_t data)
 {
-    shiftOut(sdi_pin, sck_pin, MSBFIRST, msb);
-    shiftOut(sdi_pin, sck_pin, MSBFIRST, lsb);
+    SPI.beginTransaction(SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    SPI.transfer16(cs_pin, data);
+    SPI.endTransaction();
 }

@@ -1,5 +1,5 @@
-#ifndef _mcp49xx_H
-#define _mcp49xx_H
+#ifndef _MCP49XX_H
+#define _MCP49XX_H
 
 #include <Arduino.h>
 #include <inttypes.h>
@@ -27,7 +27,7 @@ class mcp49xx
         CHANNEL_B = 1
     };
 
-    mcp49xx(Model _model, int _cs_pin, int _sck_pin, int _sdi_pin, int _ldac_pin = -1);
+    mcp49xx(Model _model, int _cs_pin, int _ldac_pin = -1);
     void setBuffer(boolean _buffer);
     boolean setGain(int _gain);
     void shutdown(void);
@@ -39,14 +39,12 @@ class mcp49xx
     void output2(unsigned short _out, unsigned short _out2); // For mcp49x2
 
     void latch(void); // Actually change the output, if the LDAC pin isn't shorted to ground
-    boolean setAutomaticallyLatchDual(bool _latch);
+    boolean setAutomaticallyLatchDual(boolean _latch);
 
   private:
     void _output(unsigned short _out, Channel _chan);
-    void _transfer(byte msb, byte lsb);
+    void _transfer(uint16_t data);
     int cs_pin;
-    int sck_pin;
-    int sdi_pin;
     int ldac_pin;
     int bitwidth;
     boolean bufferVref;
