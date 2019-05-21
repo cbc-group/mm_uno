@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Atmel Studio Solution File, Format Version 11.00
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "sync_cam_xgalvo", "sync_cam_xgalvo\sync_cam_xgalvo.cppproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"
+	ProjectSection(ProjectDependencies) = postProject
+		{355343BC-7186-461D-8887-E0ED57B74D28} = {355343BC-7186-461D-8887-E0ED57B74D28}
+		{138D54FB-7515-4EFA-8A66-DE68094C930E} = {138D54FB-7515-4EFA-8A66-DE68094C930E}
+	EndProjectSection
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "mcp49xx", "..\drivers\mcp49xx\mcp49xx.cppproj", "{355343BC-7186-461D-8887-E0ED57B74D28}"
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "arduino", "..\arduino\arduino.cppproj", "{138D54FB-7515-4EFA-8A66-DE68094C930E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.ActiveCfg = Debug|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.Build.0 = Debug|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.ActiveCfg = Release|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.Build.0 = Release|AVR
+		{355343BC-7186-461D-8887-E0ED57B74D28}.Debug|AVR.ActiveCfg = Debug|AVR
+		{355343BC-7186-461D-8887-E0ED57B74D28}.Debug|AVR.Build.0 = Debug|AVR
+		{355343BC-7186-461D-8887-E0ED57B74D28}.Release|AVR.ActiveCfg = Release|AVR
+		{355343BC-7186-461D-8887-E0ED57B74D28}.Release|AVR.Build.0 = Release|AVR
+		{138D54FB-7515-4EFA-8A66-DE68094C930E}.Debug|AVR.ActiveCfg = Debug|AVR
+		{138D54FB-7515-4EFA-8A66-DE68094C930E}.Debug|AVR.Build.0 = Debug|AVR
+		{138D54FB-7515-4EFA-8A66-DE68094C930E}.Release|AVR.ActiveCfg = Release|AVR
+		{138D54FB-7515-4EFA-8A66-DE68094C930E}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
