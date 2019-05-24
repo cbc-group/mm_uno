@@ -62,11 +62,14 @@ mcp49xx::mcp49xx(mcp49xx::Model _model, int _cs_pin, int _ldac_pin)
         bitwidth = 0;
     }
     
-    SPI.begin(cs_pin);
+    // NOTE must initialize externally in setup()
+    //SPI.begin(cs_pin);
 
     // un-latch the output
-    pinMode(ldac_pin, OUTPUT);
-    digitalWrite(ldac_pin, HIGH);
+    if (ldac_pin >= 0) {
+        pinMode(ldac_pin, OUTPUT);
+        digitalWrite(ldac_pin, HIGH);
+    }
 }
 
 void mcp49xx::setBuffer(boolean _buffer)
@@ -190,7 +193,6 @@ void mcp49xx::latch(void)
     // The datasheet says CS must return high for 40+ ns before this function
     // is called: no problems, that'd be taken care of automatically, as one
     // clock cycle at 16 MHz is longer... and there'll be a delay of multiple.
-
     if (ldac_pin < 0)
         return;
 
