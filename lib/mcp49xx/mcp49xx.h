@@ -3,10 +3,13 @@
 
 #include "simba.h"
 
-/* Control frame structure. */
-struct mcp49xx_frame_t {
+/* Input buffer control. */
+#define MCP49XX_UNBUFFERED  0x01
+#define MCP49XX_BUFFERED    0x00
 
-};  
+/* Output gain selection. */
+#define MCP49XX_GAIN_1X     0x01
+#define MCP49XX_GAIN_2X     0x00
 
 /* Driver data structure. */
 struct mcp49xx_driver_t {
@@ -16,11 +19,16 @@ struct mcp49xx_driver_t {
 /**
  * Initialize given driver object.
  * 
- * @param
+ * @param[out] self_p Driver object to initialize.
+ * @param[in] spi_p SPI driver to use.
+ * @param[in] cs_p SPI chip select pin.
+ * 
  */
 int mcp49xx_init(struct mcp49xx_driver_t *self_p,
                  struct spi_device_t *spi_p,
-                 struct pin_device_t *cs_p);
+                 struct pin_device_t *cs_p,
+                 int buffer,
+                 int gain);
 
 /**
  * Starts the DAC device using given driver object.
@@ -32,6 +40,11 @@ int mcp49xx_start(struct mcp49xx_driver_t *self_p);
  */
 int mcp49xx_stop(struct mcp49xx_driver_t *self_p);
 
+/**
+ * Write new analog value.
+ */
+ssize_t mcp49xx_write(struct mcp49xx_driver_t *self_p,
+                      uint16_t value);
 
 
 

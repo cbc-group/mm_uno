@@ -1,3 +1,50 @@
+
+#include "simba.h"
+
+/* mcp49xx control frame structure. */
+struct spi_frame_t {
+    uint8_t ab : 1;     // a/b channel selection bit
+    uint8_t buf : 1;    // input buffer control bit
+    uint8_t ga : 1;     // output gain selection bit
+    uint8_t shdn : 1;   // output shutdown control bit
+    uint16_t data : 12;
+} PACKED;
+
+int mcp49xx_init(struct mcp49xx_driver_t *self_p,
+                 struct spi_device_t *spi_p,
+                 struct pin_device_t *cs_p,
+                 int buffer,
+                 int gain)
+{
+    ASSERTN(self_p != NULL, EINVAL);
+    ASSERTN(spi_p != NULL, EINVAL);
+    ASSERTN(cs_p != NULL, EINVAL);
+
+    spi_init(&self_p->spi,
+             spi_p,
+             cs_p,
+             SPI_MODE_MASTER,
+             SPI_SPEED_1MBPS,
+             0,
+             0);
+    
+    return (0);
+}
+
+int mcp49xx_start(struct mcp49xx_driver_t *self_p) 
+{
+    ASSERTN(self_p != NULL, EINVAL);
+
+    spi_start(&self_p->spi);
+}
+
+int mcp49xx_stop(struct mcp49xx_driver_t *self_p)
+{
+    ASSERTN(self_p != NULL, EINVAL);
+}
+
+
+
 /*
  * Modified by Andy @ Academia Sinica BCChen lab 2018/1/31
  * This modified library is using soft SPI to work with Micromanager Arduino firmware
