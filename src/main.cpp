@@ -22,9 +22,15 @@ volatile byte armed = false;
 
 /*
  * waveform parameters
+ * Delta_T = 15, total rising time is about 115 ms
+ * Delta_T = 10, total rising time is about 90 ms
+ * Delta_T =  5, total rising time is about 70 ms
+ * Delat_T =  1, total rising time is about 50 ms
+ * The loop for 4096 steps cost about 45ms
+ * Each step cost 11 microsec  
  */
 #define N_STEPS     4096
-#define DELTA_T     70
+#define DELTA_T     10
 
 
 /*
@@ -50,7 +56,7 @@ void setup() {
     // DAC initialized
     SPI.begin(CS_PIN);
     
-    dac.setGain(1);
+    dac.setGain(2);
     // set default value
     dac.output(0);
 
@@ -81,11 +87,11 @@ void loop() {
         if (direction) {
             index++;
         } else {
-            index--;
+            index--;   
         }
     }
 
-    delayMicroseconds(15);
+    delayMicroseconds(DELTA_T);
 }
 
 

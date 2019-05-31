@@ -207,6 +207,6 @@ void mcp49xx::latch(void)
 void mcp49xx::_transfer(uint16_t data)
 {
     SPI.beginTransaction(SPISettings(20000000, MSBFIRST, SPI_MODE0));
-    SPI.transfer16(cs_pin, data);
+    SPI.transfer16(cs_pin, data); 
     SPI.endTransaction();
 }
