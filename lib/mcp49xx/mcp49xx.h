@@ -3,6 +3,14 @@
 
 #include "simba.h"
 
+/* DAC model. */
+#define MCP4901             0x01
+#define MCP4911             0x02
+#define MCP4921             0x04
+#define MCP4902             0x11
+#define MCP4912             0x12
+#define MCP4922             0x14
+
 /* Input buffer control. */
 #define MCP49XX_UNBUFFERED  0x01
 #define MCP49XX_BUFFERED    0x00
@@ -28,6 +36,7 @@ struct mcp49xx_driver_t {
 int mcp49xx_init(struct mcp49xx_driver_t *self_p,
                  struct spi_device_t *spi_p,
                  struct pin_device_t *cs_p,
+                 int model, 
                  int buffer,
                  int gain);
 
