@@ -14,6 +14,7 @@
 /* Driver data structure. */
 struct mcp49xx_driver_t {
     struct spi_driver_t spi;
+    THRD_STACK(stack, 64); // TODO is this really necessary?
 };
 
 /**

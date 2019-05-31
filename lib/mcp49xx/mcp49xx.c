@@ -28,6 +28,12 @@ int mcp49xx_init(struct mcp49xx_driver_t *self_p,
              0,
              0);
     
+    thrd_spawn(isr_main,
+               self_p,
+               -15,
+               self_p->stack,
+               sizeof(self_p->stack));
+    
     return (0);
 }
 
@@ -36,6 +42,18 @@ int mcp49xx_start(struct mcp49xx_driver_t *self_p)
     ASSERTN(self_p != NULL, EINVAL);
 
     spi_start(&self_p->spi);
+
+    // TODO verify config
+
+    spi_take_buf(&self_p->spi);
+    spi_select(&self_p->spi);
+
+    // TODO reset device
+
+    spi_deselect(&self_p->spi);
+    spi_give_bus(&self_p->spi);
+
+    return (0);
 }
 
 int mcp49xx_stop(struct mcp49xx_driver_t *self_p)
@@ -43,7 +61,11 @@ int mcp49xx_stop(struct mcp49xx_driver_t *self_p)
     ASSERTN(self_p != NULL, EINVAL);
 }
 
+ssize_t mcp49xx_write(struct mcp49xx_driver_t *self_p,
+                      uint16_t value)
+{
 
+}
 
 /*
  * Modified by Andy @ Academia Sinica BCChen lab 2018/1/31
