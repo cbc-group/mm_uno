@@ -1,5 +1,41 @@
-#ifndef _MCP49XX_H
-#define _MCP49XX_H
+#ifndef __MCP49XX_H__
+#define __MCP49XX_H__
+
+#include "simba.h"
+
+/* Control frame structure. */
+struct mcp49xx_frame_t {
+
+};  
+
+/* Driver data structure. */
+struct mcp49xx_driver_t {
+    struct spi_driver_t spi;
+};
+
+/**
+ * Initialize given driver object.
+ * 
+ * @param
+ */
+int mcp49xx_init(struct mcp49xx_driver_t *self_p,
+                 struct spi_device_t *spi_p,
+                 struct pin_device_t *cs_p);
+
+/**
+ * Starts the DAC device using given driver object.
+ */
+int mcp49xx_start(struct mcp49xx_driver_t *self_p);
+
+/**
+ * Stops the DAC device reference by driver object.
+ */
+int mcp49xx_stop(struct mcp49xx_driver_t *self_p);
+
+
+
+
+
 
 #include <Arduino.h>
 #include <inttypes.h>
